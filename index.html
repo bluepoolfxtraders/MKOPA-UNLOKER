@@ -1,684 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMEI Unlocker - Simulation Tool</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
-        }
+<meta charset="UTF-8">
+<title>Secure Device Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(145deg, #0a3d1f 0%, #0f5a2e 50%, #0a3d1f 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f7f6;
+}
 
-        .container {
-            max-width: 450px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
-            padding: 24px 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 2px #2ecc71 inset;
-            border: 1px solid #27ae60;
-        }
+.container {
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  min-height: 100vh;
+  padding: 20px;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
+/* HEADER */
+.badge {
+  color: #00c853;
+  font-size: 12px;
+  font-weight: bold;
+}
 
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
+.title {
+  font-size: 20px;
+  font-weight: bold;
+}
 
-        .logo-icon {
-            background: #2ecc71;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-            box-shadow: 0 4px 0 #1a7a3f;
-        }
+.subtitle {
+  font-size: 13px;
+  color: gray;
+}
 
-        .logo-text {
-            font-size: 28px;
-            font-weight: 800;
-            color: #2ecc71;
-            text-shadow: 0 2px 0 #1a7a3f;
-            letter-spacing: 1px;
-        }
+/* STEPS */
+.steps {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
 
-        .subtitle {
-            color: #aaa;
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
+.step {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-        .disclaimer {
-            background: rgba(255, 193, 7, 0.15);
-            border-left: 4px solid #ffc107;
-            padding: 10px 14px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 12px;
-            color: #ffd966;
-        }
+.step.active {
+  background: #00c853;
+  color: white;
+}
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+.line {
+  flex: 1;
+  height: 3px;
+  background: #ddd;
+}
 
-        .input-label {
-            color: #2ecc71;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+.line.active {
+  background: #00c853;
+}
 
-        .imei-input {
-            width: 100%;
-            padding: 16px 18px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 18px;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            outline: none;
-            transition: all 0.3s;
-            text-align: center;
-        }
+.labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: gray;
+}
 
-        .imei-input:focus {
-            border-color: #2ecc71;
-            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
-        }
+/* FORM */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
 
-        .imei-input::placeholder {
-            color: #555;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
+button {
+  width: 100%;
+  padding: 12px;
+  background: #00c853;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
 
-        .progress-section {
-            margin: 24px 0;
-            opacity: 0;
-        }
+/* AUTO INFO */
+.auto {
+  background: #e8f5e9;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+}
 
-        .progress-bar-container {
-            background: #1a1a1a;
-            height: 8px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
+/* PROCESS */
+.process {
+  display: none;
+}
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #27ae60, #2ecc71, #27ae60);
-            border-radius: 20px;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 10px #2ecc71;
-        }
+.bar {
+  height: 10px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
 
-        .status-text {
-            color: #2ecc71;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 16px;
-            min-height: 20px;
-        }
+.fill {
+  height: 100%;
+  width: 0%;
+  background: #00c853;
+}
 
-        .process-list {
-            background: #111;
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid #2a2a2a;
-        }
+.logs {
+  background: black;
+  color: #00ff9d;
+  font-size: 12px;
+  padding: 10px;
+  margin-top: 10px;
+  height: 120px;
+  overflow: auto;
+  border-radius: 8px;
+}
 
-        .process-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #222;
-            opacity: 0.4;
-            transition: opacity 0.3s;
-        }
+/* SUCCESS */
+.success {
+  display: none;
+  text-align: center;
+}
 
-        .process-item:last-child {
-            border-bottom: none;
-        }
+.check {
+  font-size: 50px;
+  color: #00c853;
+}
 
-        .process-item.active {
-            opacity: 1;
-        }
-
-        .process-item.completed {
-            opacity: 1;
-            color: #2ecc71;
-        }
-
-        .check-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #333;
-            margin-right: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-
-        .process-item.completed .check-icon {
-            background: #2ecc71;
-            color: white;
-        }
-
-        .process-item.active .check-icon {
-            background: #f1c40f;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .process-name {
-            flex: 1;
-            font-size: 14px;
-        }
-
-        .process-status {
-            font-size: 12px;
-            color: #888;
-        }
-
-        .unlock-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(145deg, #1a7a3f, #27ae60);
-            border: none;
-            border-radius: 18px;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #0f4a28, 0 4px 12px rgba(46, 204, 113, 0.3);
-            transition: all 0.1s;
-            margin-bottom: 12px;
-        }
-
-        .unlock-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #0f4a28, 0 4px 12px rgba(46, 204, 113, 0.3);
-        }
-
-        .unlock-btn:disabled {
-            opacity: 0.5;
-            transform: none;
-            box-shadow: 0 4px 0 #0f4a28;
-            cursor: not-allowed;
-        }
-
-        .payment-modal {
-            background: #111;
-            border-radius: 24px;
-            padding: 28px 20px;
-            margin-top: 20px;
-            border: 2px solid #f1c40f;
-            display: none;
-        }
-
-        .payment-title {
-            color: #f1c40f;
-            font-size: 22px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .payment-amount {
-            font-size: 48px;
-            font-weight: 800;
-            color: white;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .payment-amount small {
-            font-size: 20px;
-            color: #aaa;
-        }
-
-        .payment-number {
-            background: #1a1a1a;
-            padding: 16px;
-            border-radius: 16px;
-            text-align: center;
-            margin: 20px 0;
-            border: 2px dashed #f1c40f;
-        }
-
-        .payment-number .label {
-            color: #aaa;
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-
-        .payment-number .number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #2ecc71;
-            letter-spacing: 2px;
-        }
-
-        .pay-now-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(145deg, #d4a017, #f1c40f);
-            border: none;
-            border-radius: 18px;
-            color: #111;
-            font-size: 18px;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #b8860b;
-        }
-
-        .fake-alert {
-            background: rgba(46, 204, 113, 0.1);
-            border: 1px solid #2ecc71;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 16px;
-            text-align: center;
-            color: #2ecc71;
-            font-size: 12px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #555;
-            font-size: 11px;
-        }
-    </style>
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+.card {
+  background: #e8f5e9;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  text-align: left;
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <div class="logo-icon">M</div>
-                <span class="logo-text">UNLOCKER</span>
-            </div>
-            <div class="subtitle">SIMULATION TOOL • PRANK VERSION</div>
-        </div>
 
-        <div class="disclaimer">
-            ⚠️ THIS IS A SIMULATION / PRANK TOOL<br>
-            No actual unlocking occurs. For entertainment only.
-        </div>
+<div class="container">
 
-        <div class="input-group">
-            <label class="input-label">Enter IMEI Number</label>
-            <input type="text" class="imei-input" id="imeiInput" placeholder="15-digit IMEI" maxlength="15" value="354567890123456">
-        </div>
+  <div class="badge">● SECURE PORTAL</div>
+  <div class="title">Device Service System</div>
+  <div class="subtitle">Secure processing in a few steps</div>
 
-        <button class="unlock-btn" id="startBtn">START UNLOCK</button>
+  <!-- STEPS -->
+  <div class="steps">
+    <div class="step active" id="s1">1</div>
+    <div class="line" id="l1"></div>
+    <div class="step" id="s2">2</div>
+    <div class="line" id="l2"></div>
+    <div class="step" id="s3">3</div>
+    <div class="line" id="l3"></div>
+    <div class="step" id="s4">4</div>
+  </div>
 
-        <div class="progress-section" id="progressSection">
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            <div class="status-text" id="statusText">Ready to process...</div>
-            
-            <div class="process-list">
-                <div class="process-item" id="step1">
-                    <span class="check-icon">✓</span>
-                    <span class="process-name">Connecting to server...</span>
-                    <span class="process-status"></span>
-                </div>
-                <div class="process-item" id="step2">
-                    <span class="check-icon">✓</span>
-                    <span class="process-name">Validating IMEI format...</span>
-                    <span class="process-status"></span>
-                </div>
-                <div class="process-item" id="step3">
-                    <span class="check-icon">✓</span>
-                    <span class="process-name">Checking device status...</span>
-                    <span class="process-status"></span>
-                </div>
-                <div class="process-item" id="step4">
-                    <span class="check-icon">✓</span>
-                    <span class="process-name">Bypassing security layer...</span>
-                    <span class="process-status"></span>
-                </div>
-                <div class="process-item" id="step5">
-                    <span class="check-icon">✓</span>
-                    <span class="process-name">Generating unlock token...</span>
-                    <span class="process-status"></span>
-                </div>
-                <div class="process-item" id="step6">
-                    <span class="check-icon">✓</span>
-                    <span class="process-name">Final verification...</span>
-                    <span class="process-status"></span>
-                </div>
-            </div>
-        </div>
+  <div class="labels">
+    <span>Device</span>
+    <span>Verify</span>
+    <span>Process</span>
+    <span>Complete</span>
+  </div>
 
-        <div class="payment-modal" id="paymentModal">
-            <div class="payment-title">⚠️ VERIFICATION REQUIRED</div>
-            <div class="payment-amount">KSh 500 <small>FAST</small></div>
-            <p style="color:#aaa;text-align:center;margin-bottom:16px;">To complete the unlock process</p>
-            
-            <div class="payment-number">
-                <div class="label">Send Payment To:</div>
-                <div class="number">+254 786 662228</div>
-                <div style="color:#2ecc71;margin-top:12px;font-size:14px;">M-PESA • Airtel Money • T-Kash</div>
-            </div>
-            
-            <button class="pay-now-btn" id="payNowBtn">PAY KSh 500 NOW</button>
-            
-            <div class="fake-alert" id="successMessage" style="display:none;">
-                ✅ PAYMENT RECEIVED!<br>
-                <span style="font-size:16px;font-weight:bold;">DEVICE SUCCESSFULLY UNLOCKED!</span><br>
-                <span style="color:#2ecc71;">IMEI: <span id="unlockedIMEI"></span></span>
-            </div>
-        </div>
+  <!-- FORM -->
+  <div id="form">
+    <h3>Device Info</h3>
 
-        <div class="footer">
-            SIMULATION TOOL v2.4.1 • GSAP ANIMATIONS<br>
-            For entertainment purposes only
-        </div>
+    <input placeholder="Device Model">
+    <input placeholder="IMEI Number">
+    <input placeholder="Phone Number">
+
+    <div class="auto">
+      📱 Battery: 100%<br>
+      📶 Network: 4G<br>
+      🔒 Status: Detected
     </div>
 
-    <script>
-        const startBtn = document.getElementById('startBtn');
-        const progressSection = document.getElementById('progressSection');
-        const progressBar = document.getElementById('progressBar');
-        const statusText = document.getElementById('statusText');
-        const paymentModal = document.getElementById('paymentModal');
-        const successMessage = document.getElementById('successMessage');
-        const unlockedIMEI = document.getElementById('unlockedIMEI');
-        const imeiInput = document.getElementById('imeiInput');
-        const payNowBtn = document.getElementById('payNowBtn');
+    <button onclick="start()">Start Process</button>
+  </div>
 
-        const steps = [
-            { id: 'step1', name: 'Connecting to server...', duration: 1.5 },
-            { id: 'step2', name: 'Validating IMEI format...', duration: 1.2 },
-            { id: 'step3', name: 'Checking device status...', duration: 1.8 },
-            { id: 'step4', name: 'Bypassing security layer...', duration: 2.0 },
-            { id: 'step5', name: 'Generating unlock token...', duration: 1.5 },
-            { id: 'step6', name: 'Final verification...', duration: 1.0 }
-        ];
+  <!-- PROCESS -->
+  <div class="process" id="process">
+    <h3>Processing...</h3>
 
-        let isProcessing = false;
-        let currentStep = 0;
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+    </div>
 
-        // GSAP Animation for container entrance
-        gsap.from('.container', {
-            duration: 1,
-            y: 50,
-            opacity: 0,
-            ease: 'elastic.out(1, 0.5)'
-        });
+    <p id="percent">0%</p>
 
-        gsap.from('.logo', {
-            duration: 0.8,
-            scale: 0,
-            rotation: -180,
-            ease: 'back.out(1.7)',
-            delay: 0.3
-        });
+    <div class="logs" id="logs"></div>
+  </div>
 
-        function validateIMEI(imei) {
-            const cleanImei = imei.replace(/\D/g, '');
-            return cleanImei.length === 15;
-        }
+  <!-- SUCCESS -->
+  <div class="success" id="success">
+    <div class="check">✔</div>
+    <h2>Completed Successfully</h2>
+    <p>This is a demo system output.</p>
 
-        function resetProcess() {
-            currentStep = 0;
-            progressBar.style.width = '0%';
-            
-            document.querySelectorAll('.process-item').forEach(item => {
-                item.classList.remove('active', 'completed');
-                item.querySelector('.process-status').textContent = '';
-            });
-            
-            paymentModal.style.display = 'none';
-            successMessage.style.display = 'none';
-        }
+    <div class="card">
+      1. Restart device<br>
+      2. Insert SIM<br>
+      3. Follow setup<br>
+      4. Done
+    </div>
+  </div>
 
-        async function runProcess() {
-            const imei = imeiInput.value.trim();
-            
-            if (!validateIMEI(imei)) {
-                // GSAP shake animation
-                gsap.to('.imei-input', {
-                    duration: 0.1,
-                    x: -10,
-                    repeat: 3,
-                    yoyo: true,
-                    onComplete: () => gsap.to('.imei-input', { x: 0 })
-                });
-                statusText.textContent = '❌ Invalid IMEI! Must be 15 digits.';
-                statusText.style.color = '#e74c3c';
-                return;
-            }
+</div>
 
-            isProcessing = true;
-            startBtn.disabled = true;
-            startBtn.textContent = 'PROCESSING...';
-            
-            // GSAP reveal progress section
-            gsap.to(progressSection, {
-                duration: 0.5,
-                opacity: 1,
-                y: 0,
-                ease: 'power2.out'
-            });
-            progressSection.style.opacity = '1';
-            
-            statusText.style.color = '#2ecc71';
-            statusText.textContent = '🔓 Starting unlock sequence...';
-            
-            for (let i = 0; i < steps.length; i++) {
-                currentStep = i;
-                const step = steps[i];
-                const element = document.getElementById(step.id);
-                const progress = ((i + 1) / steps.length) * 100;
-                
-                // GSAP progress bar animation
-                gsap.to(progressBar, {
-                    duration: 0.5,
-                    width: `${progress}%`,
-                    ease: 'power2.out'
-                });
-                
-                // Update UI
-                element.classList.add('active');
-                element.classList.remove('completed');
-                statusText.textContent = `⚙️ ${step.name}`;
-                
-                // Fake processing time with GSAP delay
-                await new Promise(resolve => {
-                    gsap.delayedCall(step.duration, resolve);
-                });
-                
-                // Mark as completed
-                element.classList.remove('active');
-                element.classList.add('completed');
-                element.querySelector('.process-status').textContent = 'DONE';
-                
-                // GSAP completion animation
-                gsap.fromTo(element.querySelector('.check-icon'), 
-                    { scale: 1 },
-                    { scale: 1.3, duration: 0.2, yoyo: true, repeat: 1 }
-                );
-            }
-            
-            statusText.textContent = '⚠️ VERIFICATION REQUIRED - Payment needed to proceed';
-            statusText.style.color = '#f1c40f';
-            
-            // GSAP reveal payment modal
-            gsap.fromTo(paymentModal,
-                { opacity: 0, y: 30, display: 'none' },
-                { 
-                    duration: 0.6, 
-                    opacity: 1, 
-                    y: 0, 
-                    display: 'block',
-                    ease: 'back.out(1.2)'
-                }
-            );
-            paymentModal.style.display = 'block';
-            
-            // GSAP pulse animation on payment button
-            gsap.to('.pay-now-btn', {
-                duration: 1,
-                scale: 1.05,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut'
-            });
-            
-            startBtn.disabled = false;
-            startBtn.textContent = 'START UNLOCK';
-            isProcessing = false;
-        }
+<script>
+let logs = [
+  "Connecting to server...",
+  "Authenticating request...",
+  "Validating IMEI...",
+  "Checking network lock...",
+  "Accessing database...",
+  "Processing data...",
+  "Finalizing..."
+];
 
-        startBtn.addEventListener('click', () => {
-            if (isProcessing) return;
-            resetProcess();
-            runProcess();
-        });
+function start() {
+  document.getElementById("form").style.display = "none";
+  document.getElementById("process").style.display = "block";
 
-        payNowBtn.addEventListener('click', () => {
-            // Stop pulse animation
-            gsap.killTweensOf('.pay-now-btn');
-            gsap.to('.pay-now-btn', { scale: 1 });
-            
-            const imei = imeiInput.value.trim();
-            
-            // GSAP success animation
-            gsap.fromTo(successMessage,
-                { opacity: 0, scale: 0.8, display: 'none' },
-                { 
-                    duration: 0.5, 
-                    opacity: 1, 
-                    scale: 1, 
-                    display: 'block',
-                    ease: 'elastic.out(1, 0.5)'
-                }
-            );
-            successMessage.style.display = 'block';
-            unlockedIMEI.textContent = imei;
-            
-            // GSAP celebration effect
-            gsap.to('.container', {
-                duration: 0.5,
-                boxShadow: '0 20px 40px rgba(0,0,0,0.5), 0 0 30px #2ecc71 inset',
-                repeat: 3,
-                yoyo: true
-            });
-            
-            statusText.textContent = '✅ DEVICE UNLOCKED SUCCESSFULLY!';
-            statusText.style.color = '#2ecc71';
-            
-            // Disable payment button
-            payNowBtn.disabled = true;
-            payNowBtn.style.opacity = '0.6';
-            payNowBtn.textContent = 'PAYMENT COMPLETE ✓';
-            
-            // Confetti-like animation using GSAP
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.style.position = 'fixed';
-                particle.style.width = '8px';
-                particle.style.height = '8px';
-                particle.style.background = i % 2 === 0 ? '#2ecc71' : '#f1c40f';
-                particle.style.borderRadius = '50%';
-                particle.style.pointerEvents = 'none';
-                particle.style.zIndex = '9999';
-                document.body.appendChild(particle);
-                
-                gsap.fromTo(particle,
-                    {
-                        x: window.innerWidth / 2,
-                        y: window.innerHeight / 2,
-                        opacity: 1,
-                        scale: 0
-                    },
-                    {
-                        duration: 1.5,
-                        x: window.innerWidth / 2 + (Math.random() - 0.5) * 400,
-                        y: window.innerHeight / 2 + (Math.random() - 0.5) * 400,
-                        opacity: 0,
-                        scale: 1,
-                        ease: 'power2.out',
-                        onComplete: () => particle.remove()
-                    }
-                );
-            }
-        });
+  let fill = document.getElementById("fill");
+  let percent = document.getElementById("percent");
+  let logBox = document.getElementById("logs");
 
-        // Random IMEI generator for demo
-        imeiInput.addEventListener('focus', function() {
-            if (!this.value || this.value === '354567890123456') {
-                // Generate random 15-digit IMEI
-                let imei = '35';
-                for (let i = 0; i < 13; i++) {
-                    imei += Math.floor(Math.random() * 10);
-                }
-                this.value = imei;
-            }
-        });
+  let p = 0;
+  let i = 0;
 
-        // GSAP hover animations
-        document.querySelectorAll('.process-item').forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                if (!item.classList.contains('active') && !item.classList.contains('completed')) {
-                    gsap.to(item, { duration: 0.2, x: 5 });
-                }
-            });
-            item.addEventListener('mouseleave', () => {
-                gsap.to(item, { duration: 0.2, x: 0 });
-            });
-        });
-    </script>
+  let interval = setInterval(() => {
+    p += 2;
+    fill.style.width = p + "%";
+    percent.innerText = p + "%";
+
+    if (i < logs.length && p % 14 === 0) {
+      logBox.innerHTML += logs[i] + "<br>";
+      logBox.scrollTop = logBox.scrollHeight;
+      i++;
+    }
+
+    if (p >= 100) {
+      clearInterval(interval);
+      finish();
+    }
+  }, 100);
+}
+
+function finish() {
+  let steps = ["s2","s3","s4"];
+  let lines = ["l1","l2","l3"];
+
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      document.getElementById(id).classList.add("active");
+      document.getElementById(lines[i]).classList.add("active");
+    }, i * 500);
+  });
+
+  setTimeout(() => {
+    document.getElementById("process").style.display = "none";
+    document.getElementById("success").style.display = "block";
+
+    gsap.from("#success", {opacity:0, y:30, duration:1});
+  }, 2000);
+}
+</script>
+
 </body>
-                  </html>
+        </html>
